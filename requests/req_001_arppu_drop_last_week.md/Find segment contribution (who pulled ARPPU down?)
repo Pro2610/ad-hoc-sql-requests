@@ -1,0 +1,40 @@
+WITH base AS (
+  SELECT
+    CASE
+      WHEN DATE(payment_date) >= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY) THEN 'last_7_days'
+      ELSE 'prev_7_days'
+    END AS period,
+    location,
+    software_name,
+    `User Type` AS user_type,
+    SUM(revenue_amount) AS revenue,
+    COUNT(DISTINCT user_id) AS paid_users
+  FROM `project.dataset.payments`
+  WHERE DATE(payment_date) >= DATE_SUB(CURRENT_DATE(), INTERVAL 14 DAY)
+  GROUP BY 1,2,3,4
+),
+p AS (
+  SELECT
+    location,
+    software_name,
+    user_type,
+    SUM(IF(period='prev_7_days', revenue, 0)) AS rev_prev,
+    SUM(IF(period='last_7_days', revenue, 0)) AS rev_last,
+    SUM(IF(period='prev_7_days', paid_users, 0)) AS pu_prev,
+    SUM(IF(period='last_7_days', paid_users, 0)) AS pu_last
+  FROM base
+  GROUP BY 1,2,3
+)
+SELECT
+  location,
+  software_name,
+  user_type,
+  SAFE_DIVIDE(rev_prev, NULLIF(pu_prev, 0)) AS arppu_prev,
+  SAFE_DIVIDE(rev_last, NULLIF(pu_last, 0)) AS arppu_last,
+  (SAFE_DIVIDE(rev_last, NULLIF(pu_last, 0)) - SAFE_DIVIDE(rev_prev, NULLIF(pu_prev, 0))) AS arppu_delta,
+  (rev_last - rev_prev) AS revenue_delta,
+  (pu_last - pu_prev) AS paid_users_delta
+FROM p
+WHERE pu_prev >= 20 OR pu_last >= 20
+ORDER BY arppu_delta ASC
+LIMIT 20;
