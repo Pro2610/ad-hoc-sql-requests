@@ -1,0 +1,31 @@
+WITH daily AS (
+  SELECT
+    DATE(payment_date) AS day,
+    SUM(revenue_amount) AS revenue,
+    COUNT(DISTINCT user_id) AS paid_users
+  FROM `project.dataset.payments`
+  WHERE DATE(payment_date) >= DATE_SUB(CURRENT_DATE(), INTERVAL 14 DAY)
+  GROUP BY 1
+),
+periods AS (
+  SELECT
+    CASE
+      WHEN day >= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY) THEN 'last_7_days'
+      ELSE 'prev_7_days'
+    END AS period,
+    SUM(revenue) AS revenue,
+    SUM(paid_users) AS paid_users,
+    SAFE_DIVIDE(SUM(revenue), SUM(paid_users)) AS arppu
+  FROM daily
+  GROUP BY 1
+)
+SELECT
+  period,
+  revenue,
+  paid_users,
+  arppu,
+  revenue - LAG(revenue) OVER (ORDER BY period) AS revenue_delta,
+  paid_users - LAG(paid_users) OVER (ORDER BY period) AS paid_users_delta,
+  arppu - LAG(arppu) OVER (ORDER BY period) AS arppu_delta
+FROM periods
+ORDER BY period;
