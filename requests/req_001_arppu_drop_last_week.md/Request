@@ -1,0 +1,10 @@
+# Req 001 — Investigate ARPPU Drop (Last 7 Days)
+
+## 📌 Request
+ARPPU dropped over the last 7 days. Can we identify the main driver?
+
+## 🧩 Assumptions
+- ARPPU = revenue / paid_users
+- Time window: last 14 days (to compare last 7 vs previous 7)
+- Use `payment_date`, `revenue_amount`, `user_id`
+- Optional segmentation: `location`, `software_name`, `User Type`
