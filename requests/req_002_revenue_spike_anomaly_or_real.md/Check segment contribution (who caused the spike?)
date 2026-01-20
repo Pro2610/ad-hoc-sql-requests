@@ -1,0 +1,52 @@
+WITH base AS (
+  SELECT
+    DATE(payment_date) AS day,
+    location,
+    software_name,
+    `User Type` AS user_type,
+    SUM(revenue_amount) AS revenue
+  FROM `project.dataset.payments`
+  WHERE DATE(payment_date) >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)
+  GROUP BY 1,2,3,4
+),
+spike_day AS (
+  SELECT day
+  FROM base
+  GROUP BY day
+  ORDER BY SUM(revenue) DESC
+  LIMIT 1
+),
+baseline AS (
+  SELECT
+    location,
+    software_name,
+    user_type,
+    AVG(revenue) AS avg_revenue
+  FROM base
+  WHERE day < (SELECT day FROM spike_day)
+    AND day >= DATE_SUB((SELECT day FROM spike_day), INTERVAL 7 DAY)
+  GROUP BY 1,2,3
+),
+spike AS (
+  SELECT
+    location,
+    software_name,
+    user_type,
+    revenue
+  FROM base
+  WHERE day = (SELECT day FROM spike_day)
+)
+SELECT
+  s.location,
+  s.software_name,
+  s.user_type,
+  s.revenue AS spike_revenue,
+  b.avg_revenue,
+  (s.revenue - b.avg_revenue) AS revenue_delta
+FROM spike s
+LEFT JOIN baseline b
+  ON s.location = b.location
+ AND s.software_name = b.software_name
+ AND s.user_type = b.user_type
+ORDER BY revenue_delta DESC
+LIMIT 20;
