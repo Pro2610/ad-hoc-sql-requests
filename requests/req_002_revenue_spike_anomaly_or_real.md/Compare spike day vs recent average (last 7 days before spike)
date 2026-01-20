@@ -1,0 +1,32 @@
+WITH daily_revenue AS (
+  SELECT
+    DATE(payment_date) AS day,
+    SUM(revenue_amount) AS revenue
+  FROM `project.dataset.payments`
+  WHERE DATE(payment_date) >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)
+  GROUP BY 1
+),
+spike_day AS (
+  SELECT
+    day AS spike_day,
+    revenue AS spike_revenue
+  FROM daily_revenue
+  ORDER BY revenue DESC
+  LIMIT 1
+),
+baseline AS (
+  SELECT
+    AVG(revenue) AS avg_revenue_before_spike
+  FROM daily_revenue
+  WHERE day < (SELECT spike_day FROM spike_day)
+    AND day >= DATE_SUB((SELECT spike_day FROM spike_day), INTERVAL 7 DAY)
+)
+SELECT
+  s.spike_day,
+  s.spike_revenue,
+  b.avg_revenue_before_spike,
+  SAFE_DIVIDE(
+    s.spike_revenue - b.avg_revenue_before_spike,
+    b.avg_revenue_before_spike
+  ) AS spike_lift_pct
+FROM spike_day s, baseline b;
