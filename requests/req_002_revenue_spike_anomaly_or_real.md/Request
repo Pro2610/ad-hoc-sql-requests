@@ -1,0 +1,11 @@
+# Req 002 — Revenue Spike: Anomaly or Real?
+
+## 📌 Request
+We observed a sudden revenue spike.  
+Is it a real business change or just a short-term anomaly?
+
+## 🧩 Assumptions
+- Revenue is based on `revenue_amount`
+- Analysis window: last 30 days
+- Compare spike day vs historical baseline
+- Optional segmentation: `location`, `software_name`, `User Type`
