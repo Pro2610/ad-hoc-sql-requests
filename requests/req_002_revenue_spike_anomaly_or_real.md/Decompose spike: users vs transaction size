@@ -1,0 +1,42 @@
+WITH daily_metrics AS (
+  SELECT
+    DATE(payment_date) AS day,
+    SUM(revenue_amount) AS revenue,
+    COUNT(DISTINCT user_id) AS paid_users,
+    COUNT(*) AS transactions,
+    SAFE_DIVIDE(SUM(revenue_amount), COUNT(DISTINCT user_id)) AS arppu,
+    SAFE_DIVIDE(SUM(revenue_amount), COUNT(*)) AS aov
+  FROM `project.dataset.payments`
+  WHERE DATE(payment_date) >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)
+  GROUP BY 1
+),
+spike_day AS (
+  SELECT *
+  FROM daily_metrics
+  ORDER BY revenue DESC
+  LIMIT 1
+),
+baseline AS (
+  SELECT
+    AVG(revenue) AS avg_revenue,
+    AVG(paid_users) AS avg_paid_users,
+    AVG(arppu) AS avg_arppu,
+    AVG(aov) AS avg_aov
+  FROM daily_metrics
+  WHERE day < (SELECT day FROM spike_day)
+    AND day >= DATE_SUB((SELECT day FROM spike_day), INTERVAL 7 DAY)
+)
+SELECT
+  s.day,
+  s.revenue,
+  s.paid_users,
+  s.arppu,
+  s.aov,
+  b.avg_revenue,
+  b.avg_paid_users,
+  b.avg_arppu,
+  b.avg_aov,
+  s.paid_users - b.avg_paid_users AS paid_users_delta,
+  s.arppu - b.avg_arppu AS arppu_delta,
+  s.aov - b.avg_aov AS aov_delta
+FROM spike_day s, baseline b;
