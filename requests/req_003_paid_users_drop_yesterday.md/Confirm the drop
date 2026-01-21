@@ -1,0 +1,13 @@
+WITH daily_paid_users AS (
+  SELECT
+    DATE(payment_date) AS day,
+    COUNT(DISTINCT user_id) AS paid_users
+  FROM `project.dataset.payments`
+  WHERE DATE(payment_date) >= DATE_SUB(CURRENT_DATE(), INTERVAL 8 DAY)
+  GROUP BY 1
+)
+SELECT
+  day,
+  paid_users
+FROM daily_paid_users
+ORDER BY day;
