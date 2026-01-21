@@ -1,0 +1,11 @@
+# Req 003 — Why Paid Users Dropped Yesterday?
+
+## 📌 Request
+Paid users dropped yesterday.
+Can we identify the root cause?
+
+## 🧩 Assumptions
+- Paid user = user with at least one payment per day
+- Compare **yesterday** vs **previous 7-day daily average**
+- Use `payment_date`, `user_id`, `revenue_amount`
+- Optional segmentation: `location`, `software_name`, `User Type`
