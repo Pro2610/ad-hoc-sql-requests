@@ -1,0 +1,26 @@
+WITH daily_paid_users AS (
+  SELECT
+    DATE(payment_date) AS day,
+    COUNT(DISTINCT user_id) AS paid_users
+  FROM `project.dataset.payments`
+  WHERE DATE(payment_date) >= DATE_SUB(CURRENT_DATE(), INTERVAL 8 DAY)
+  GROUP BY 1
+),
+baseline AS (
+  SELECT
+    AVG(paid_users) AS avg_paid_users
+  FROM daily_paid_users
+  WHERE day < DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY)
+)
+SELECT
+  d.day AS yesterday,
+  d.paid_users AS yesterday_paid_users,
+  b.avg_paid_users,
+  d.paid_users - b.avg_paid_users AS paid_users_delta,
+  SAFE_DIVIDE(
+    d.paid_users - b.avg_paid_users,
+    b.avg_paid_users
+  ) AS paid_users_delta_pct
+FROM daily_paid_users d
+CROSS JOIN baseline b
+WHERE d.day = DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY);
