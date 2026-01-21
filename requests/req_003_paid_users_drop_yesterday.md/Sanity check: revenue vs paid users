@@ -1,0 +1,12 @@
+SELECT
+  DATE(payment_date) AS day,
+  COUNT(DISTINCT user_id) AS paid_users,
+  SUM(revenue_amount) AS revenue,
+  SAFE_DIVIDE(
+    SUM(revenue_amount),
+    COUNT(DISTINCT user_id)
+  ) AS arppu
+FROM `project.dataset.payments`
+WHERE DATE(payment_date) >= DATE_SUB(CURRENT_DATE(), INTERVAL 8 DAY)
+GROUP BY 1
+ORDER BY day;
