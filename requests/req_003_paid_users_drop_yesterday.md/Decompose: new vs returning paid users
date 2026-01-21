@@ -1,0 +1,27 @@
+WITH first_payment AS (
+  SELECT
+    user_id,
+    MIN(DATE(payment_date)) AS first_payment_date
+  FROM `project.dataset.payments`
+  GROUP BY 1
+),
+daily_users AS (
+  SELECT
+    DATE(p.payment_date) AS day,
+    CASE
+      WHEN DATE(p.payment_date) = fp.first_payment_date THEN 'New'
+      ELSE 'Returning'
+    END AS user_type,
+    COUNT(DISTINCT p.user_id) AS paid_users
+  FROM `project.dataset.payments` p
+  JOIN first_payment fp
+    ON p.user_id = fp.user_id
+  WHERE DATE(p.payment_date) >= DATE_SUB(CURRENT_DATE(), INTERVAL 8 DAY)
+  GROUP BY 1,2
+)
+SELECT
+  day,
+  user_type,
+  paid_users
+FROM daily_users
+ORDER BY day, user_type;
