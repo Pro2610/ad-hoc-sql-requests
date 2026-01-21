@@ -1,0 +1,40 @@
+WITH base AS (
+  SELECT
+    DATE(payment_date) AS day,
+    location,
+    software_name,
+    `User Type` AS user_type,
+    COUNT(DISTINCT user_id) AS paid_users
+  FROM `project.dataset.payments`
+  WHERE DATE(payment_date) >= DATE_SUB(CURRENT_DATE(), INTERVAL 8 DAY)
+  GROUP BY 1,2,3,4
+),
+baseline AS (
+  SELECT
+    location,
+    software_name,
+    user_type,
+    AVG(paid_users) AS avg_paid_users
+  FROM base
+  WHERE day < DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY)
+  GROUP BY 1,2,3
+),
+yesterday AS (
+  SELECT *
+  FROM base
+  WHERE day = DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY)
+)
+SELECT
+  y.location,
+  y.software_name,
+  y.user_type,
+  y.paid_users AS yesterday_paid_users,
+  b.avg_paid_users,
+  (y.paid_users - b.avg_paid_users) AS paid_users_delta
+FROM yesterday y
+LEFT JOIN baseline b
+  ON y.location = b.location
+ AND y.software_name = b.software_name
+ AND y.user_type = b.user_type
+ORDER BY paid_users_delta ASC
+LIMIT 20;
