@@ -1,0 +1,9 @@
+churned_users AS (
+  SELECT
+    user_id,
+    month AS churn_month,
+    revenue AS churned_revenue
+  FROM churn_flags
+  WHERE month = DATE_SUB(DATE_TRUNC(CURRENT_DATE(), MONTH), INTERVAL 1 MONTH)
+    AND next_month_revenue IS NULL
+)
