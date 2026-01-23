@@ -1,0 +1,8 @@
+WITH monthly_user_revenue AS (
+  SELECT
+    user_id,
+    DATE_TRUNC(DATE(payment_date), MONTH) AS month,
+    SUM(revenue_amount) AS revenue
+  FROM `project.dataset.payments`
+  GROUP BY 1,2
+)
