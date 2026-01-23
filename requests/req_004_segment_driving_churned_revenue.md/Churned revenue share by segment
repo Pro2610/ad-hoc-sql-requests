@@ -1,0 +1,22 @@
+WITH segment_churn AS (
+  SELECT
+    us.location,
+    us.software_name,
+    us.user_type,
+    SUM(cu.churned_revenue) AS churned_revenue
+  FROM churned_users cu
+  JOIN user_segments us
+    ON cu.user_id = us.user_id
+  GROUP BY 1,2,3
+)
+SELECT
+  location,
+  software_name,
+  user_type,
+  churned_revenue,
+  SAFE_DIVIDE(
+    churned_revenue,
+    SUM(churned_revenue) OVER ()
+  ) AS churned_revenue_share
+FROM segment_churn
+ORDER BY churned_revenue_share DESC;
