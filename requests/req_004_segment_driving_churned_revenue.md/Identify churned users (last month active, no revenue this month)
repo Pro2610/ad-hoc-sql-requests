@@ -1,0 +1,11 @@
+ churn_flags AS (
+  SELECT
+    user_id,
+    month,
+    revenue,
+    LEAD(revenue) OVER (
+      PARTITION BY user_id
+      ORDER BY month
+    ) AS next_month_revenue
+  FROM monthly_user_revenue
+)
