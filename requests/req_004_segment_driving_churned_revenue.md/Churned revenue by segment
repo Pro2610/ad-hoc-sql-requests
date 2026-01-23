@@ -1,0 +1,12 @@
+SELECT
+  us.location,
+  us.software_name,
+  us.user_type,
+  COUNT(DISTINCT cu.user_id) AS churned_users,
+  SUM(cu.churned_revenue) AS churned_revenue
+FROM churned_users cu
+JOIN user_segments us
+  ON cu.user_id = us.user_id
+GROUP BY 1,2,3
+ORDER BY churned_revenue DESC
+LIMIT 20;
