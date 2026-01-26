@@ -1,0 +1,30 @@
+WITH scored AS (
+  SELECT
+    *,
+    (inactive_flag * 2)
+    + frequency_drop_flag
+    + revenue_drop_flag AS churn_risk_score
+  FROM (
+    SELECT
+      user_id,
+      days_since_last_payment,
+      tx_last_30d,
+      tx_before_30d,
+      revenue_last_30d,
+      revenue_before_30d,
+      historical_arppu,
+      CASE WHEN days_since_last_payment > 30 THEN 1 ELSE 0 END AS inactive_flag,
+      CASE WHEN tx_last_30d < tx_before_30d THEN 1 ELSE 0 END AS frequency_drop_flag,
+      CASE WHEN revenue_last_30d < revenue_before_30d THEN 1 ELSE 0 END AS revenue_drop_flag
+    FROM risk_signals
+  )
+)
+SELECT
+  user_id,
+  churn_risk_score,
+  days_since_last_payment,
+  historical_arppu
+FROM scored
+WHERE churn_risk_score >= 2
+ORDER BY churn_risk_score DESC, historical_arppu DESC
+LIMIT 50;
