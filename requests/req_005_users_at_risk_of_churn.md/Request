@@ -1,0 +1,18 @@
+# Req 005 — Which Users Are at Risk of Churn Next Month?
+
+## 📌 Request
+Which users are most likely to churn next month?
+
+## 🧩 Business Context
+Churn prevention is more effective than win-back.
+The goal is to **identify at-risk users early** and prioritize retention actions
+before revenue is lost.
+
+This is a **risk-based heuristic analysis**, not a predictive ML model.
+
+## 📐 Risk Heuristics (Simple & Explainable)
+A user is considered **at risk of churn** if one or more conditions apply:
+- No payment in the last **30 days**
+- Decreasing payment frequency
+- Declining monthly revenue
+- Previously high ARPPU (higher business impact)
