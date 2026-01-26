@@ -1,0 +1,14 @@
+activity_windows AS (
+  SELECT
+    p.user_id,
+    COUNTIF(DATE(p.payment_date) >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)) AS tx_last_30d,
+    COUNTIF(DATE(p.payment_date) < DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)) AS tx_before_30d,
+    SUM(CASE
+      WHEN DATE(p.payment_date) >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)
+      THEN p.revenue_amount ELSE 0 END) AS revenue_last_30d,
+    SUM(CASE
+      WHEN DATE(p.payment_date) < DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)
+      THEN p.revenue_amount ELSE 0 END) AS revenue_before_30d
+  FROM `project.dataset.payments` p
+  GROUP BY 1
+)
