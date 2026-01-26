@@ -1,0 +1,14 @@
+risk_signals AS (
+  SELECT
+    a.user_id,
+    ua.last_payment_date,
+    DATE_DIFF(CURRENT_DATE(), ua.last_payment_date, DAY) AS days_since_last_payment,
+    a.tx_last_30d,
+    a.tx_before_30d,
+    a.revenue_last_30d,
+    a.revenue_before_30d,
+    SAFE_DIVIDE(a.revenue_before_30d, NULLIF(a.tx_before_30d, 0)) AS historical_arppu
+  FROM activity_windows a
+  JOIN user_activity ua
+    ON a.user_id = ua.user_id
+)
