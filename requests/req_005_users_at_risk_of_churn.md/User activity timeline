@@ -1,0 +1,9 @@
+WITH user_activity AS (
+  SELECT
+    user_id,
+    MAX(DATE(payment_date)) AS last_payment_date,
+    COUNT(*) AS total_transactions,
+    SUM(revenue_amount) AS total_revenue
+  FROM `project.dataset.payments`
+  GROUP BY 1
+)
