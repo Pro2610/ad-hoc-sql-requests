@@ -1,0 +1,14 @@
+WITH user_revenue AS (
+  SELECT
+    user_id,
+    SUM(revenue_amount) AS revenue
+  FROM `project.dataset.payments`
+  WHERE DATE_TRUNC(DATE(payment_date), MONTH) = DATE_TRUNC(CURRENT_DATE(), MONTH)
+  GROUP BY 1
+)
+SELECT
+  user_id,
+  revenue
+FROM user_revenue
+ORDER BY revenue DESC
+LIMIT 20;
