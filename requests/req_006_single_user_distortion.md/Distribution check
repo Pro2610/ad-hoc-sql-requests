@@ -1,0 +1,35 @@
+WITH ranked_users AS (
+  SELECT
+    user_id,
+    SUM(revenue_amount) AS revenue,
+    ROW_NUMBER() OVER (ORDER BY SUM(revenue_amount) DESC) AS rnk
+  FROM `project.dataset.payments`
+  WHERE DATE_TRUNC(DATE(payment_date), MONTH) = DATE_TRUNC(CURRENT_DATE(), MONTH)
+  GROUP BY 1
+),
+totals AS (
+  SELECT
+    SUM(revenue) AS total_revenue
+  FROM ranked_users
+)
+SELECT
+  'Top 1 user' AS segment,
+  SAFE_DIVIDE(SUM(revenue), total_revenue) AS revenue_share
+FROM ranked_users, totals
+WHERE rnk = 1
+
+UNION ALL
+
+SELECT
+  'Top 5 users' AS segment,
+  SAFE_DIVIDE(SUM(revenue), total_revenue) AS revenue_share
+FROM ranked_users, totals
+WHERE rnk <= 5
+
+UNION ALL
+
+SELECT
+  'Top 10 users' AS segment,
+  SAFE_DIVIDE(SUM(revenue), total_revenue) AS revenue_share
+FROM ranked_users, totals
+WHERE rnk <= 10;
