@@ -1,0 +1,16 @@
+# Req 006 — Is a Single User Distorting Revenue Metrics?
+
+## 📌 Request
+Revenue metrics look unusually high.
+Is a single user (or a small group of users) distorting overall performance?
+
+## 🧩 Business Context
+Outliers can mislead dashboards and decision-making.
+Before acting on spikes in revenue or ARPPU, we need to verify whether:
+- growth is broadly distributed, or
+- driven by a single high-value user.
+
+## 📐 Definitions
+- **Outlier user**: a user whose revenue contribution is disproportionately high
+  compared to the rest of the population.
+- Focus period: **current month**.
