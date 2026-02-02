@@ -1,0 +1,14 @@
+SELECT
+  COUNT(*) AS targeted_users,
+  AVG(total_revenue) AS avg_total_revenue,
+  AVG(days_since_last_payment) AS avg_days_since_last_payment
+FROM (
+  SELECT
+    user_id,
+    total_revenue,
+    days_since_last_payment,
+    (churn_risk_score * value_score) AS retention_priority_score
+  FROM scored
+  WHERE churn_risk_score >= 2
+)
+WHERE retention_priority_score IS NOT NULL;
