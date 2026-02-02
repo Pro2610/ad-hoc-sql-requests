@@ -1,0 +1,21 @@
+## 📌 Request
+Which users should be prioritized for retention offers to maximize revenue impact?
+
+## 🧩 Business Context
+Retention budgets are limited.
+Sending offers to all users is inefficient and costly.
+The goal is to **prioritize users with the highest expected business impact**
+if they churn — and the highest likelihood to be saved.
+
+This analysis combines:
+- churn risk,
+- user value,
+- prioritization logic.
+
+## 📐 Prioritization Logic (Simple & Explainable)
+A user should receive a retention offer first if:
+1) They show **high churn risk**
+2) They have **high historical value (ARPPU / revenue)**
+3) They were **recently active** (still salvageable)
+
+This is a **rule-based scoring**, not an ML model.
