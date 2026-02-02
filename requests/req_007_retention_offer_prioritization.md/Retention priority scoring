@@ -1,0 +1,25 @@
+WITH scored AS (
+  SELECT
+    *,
+    -- Churn risk score
+    (inactive_flag * 2)
+    + frequency_drop_flag
+    + revenue_drop_flag AS churn_risk_score,
+
+    -- Value score (log-scaled to avoid extreme domination)
+    LOG(1 + total_revenue) AS value_score
+  FROM signals
+)
+SELECT
+  user_id,
+  churn_risk_score,
+  value_score,
+  days_since_last_payment,
+  total_revenue,
+
+  -- Final priority score
+  (churn_risk_score * value_score) AS retention_priority_score
+FROM scored
+WHERE churn_risk_score >= 2
+ORDER BY retention_priority_score DESC
+LIMIT 50;
