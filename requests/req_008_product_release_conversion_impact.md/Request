@@ -1,0 +1,21 @@
+# Req 008 — Did a Product Release Impact Conversion?
+
+## 📌 Request
+A product release went live recently.
+Did it impact conversion rates?
+
+## 🧩 Business Context
+After product releases, stakeholders want fast confirmation:
+- Did conversion improve?
+- Did anything break?
+- Should we roll back or proceed?
+
+This analysis compares **conversion before vs after the release**.
+
+## 📐 Definitions & Assumptions
+- **Release date**: replace with actual date (example: `2025-03-10`)
+- **Conversion**: user makes at least one payment
+- Compare:
+  - 7 days **before** release
+  - 7 days **after** release
+- This is a **quick impact check**, not a full experiment.
