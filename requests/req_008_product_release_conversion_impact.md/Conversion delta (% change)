@@ -1,0 +1,22 @@
+WITH periods AS (
+  SELECT
+    CASE
+      WHEN DATE(payment_date) < release_date THEN 'pre_release'
+      ELSE 'post_release'
+    END AS period,
+    COUNT(DISTINCT user_id) AS converted_users
+  FROM `project.dataset.payments`
+  WHERE DATE(payment_date)
+        BETWEEN DATE_SUB(release_date, INTERVAL 7 DAY)
+            AND DATE_ADD(release_date, INTERVAL 7 DAY)
+  GROUP BY 1, period
+)
+SELECT
+  MAX(IF(period='pre_release', converted_users, NULL)) AS pre_release_users,
+  MAX(IF(period='post_release', converted_users, NULL)) AS post_release_users,
+  SAFE_DIVIDE(
+    MAX(IF(period='post_release', converted_users, NULL))
+    - MAX(IF(period='pre_release', converted_users, NULL)),
+    MAX(IF(period='pre_release', converted_users, NULL))
+  ) AS conversion_delta_pct
+FROM periods;
