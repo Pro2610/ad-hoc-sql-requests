@@ -1,0 +1,1 @@
+DECLARE release_date DATE DEFAULT DATE('2025-03-10');
