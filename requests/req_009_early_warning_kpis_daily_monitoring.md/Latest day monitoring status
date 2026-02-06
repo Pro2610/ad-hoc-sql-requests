@@ -1,0 +1,10 @@
+SELECT *
+FROM (
+  SELECT
+    day,
+    revenue_alert,
+    users_alert
+  FROM monitoring_table
+  ORDER BY day DESC
+)
+LIMIT 1;
