@@ -1,0 +1,23 @@
+# Req 009 — Early Warning KPIs (Daily Monitoring Logic)
+
+## 📌 Request
+Define daily early-warning KPIs to quickly detect business issues.
+
+## 🧩 Business Context
+Business metrics often show problems too late.
+Daily monitoring with early-warning indicators allows teams to:
+- detect incidents quickly,
+- investigate anomalies,
+- prevent revenue loss.
+
+This analysis defines **core daily monitoring KPIs** and flags abnormal changes.
+
+## 📐 Monitoring KPIs
+Daily monitoring should track:
+- Revenue
+- Paid users
+- Transactions
+- ARPPU
+- AOV
+
+Alerts triggered when deviation exceeds baseline threshold.
