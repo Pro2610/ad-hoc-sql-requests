@@ -1,0 +1,33 @@
+WITH baseline AS (
+  SELECT
+    day,
+    revenue,
+    paid_users,
+    arppu,
+
+    AVG(revenue) OVER (ORDER BY day ROWS BETWEEN 7 PRECEDING AND 1 PRECEDING) AS revenue_baseline,
+    AVG(paid_users) OVER (ORDER BY day ROWS BETWEEN 7 PRECEDING AND 1 PRECEDING) AS paid_users_baseline,
+    AVG(arppu) OVER (ORDER BY day ROWS BETWEEN 7 PRECEDING AND 1 PRECEDING) AS arppu_baseline
+  FROM daily_kpis
+)
+SELECT
+  day,
+  revenue,
+  revenue_baseline,
+  SAFE_DIVIDE(revenue - revenue_baseline, revenue_baseline) AS revenue_delta_pct,
+  CASE
+    WHEN ABS(SAFE_DIVIDE(revenue - revenue_baseline, revenue_baseline)) > 0.20
+    THEN 'ALERT'
+    ELSE 'OK'
+  END AS revenue_alert,
+
+  paid_users,
+  paid_users_baseline,
+  SAFE_DIVIDE(paid_users - paid_users_baseline, paid_users_baseline) AS users_delta_pct,
+  CASE
+    WHEN ABS(SAFE_DIVIDE(paid_users - paid_users_baseline, paid_users_baseline)) > 0.20
+    THEN 'ALERT'
+    ELSE 'OK'
+  END AS users_alert
+FROM baseline
+ORDER BY day;
