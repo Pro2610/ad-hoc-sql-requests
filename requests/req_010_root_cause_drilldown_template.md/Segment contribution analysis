@@ -1,0 +1,20 @@
+WITH base AS (
+  SELECT
+    DATE(payment_date) AS day,
+    location,
+    software_name,
+    `User Type` AS user_type,
+    SUM(revenue_amount) AS revenue
+  FROM `project.dataset.payments`
+  WHERE DATE(payment_date) >= DATE_SUB(CURRENT_DATE(), INTERVAL 14 DAY)
+  GROUP BY 1,2,3,4
+)
+SELECT
+  location,
+  software_name,
+  user_type,
+  SUM(revenue) AS revenue
+FROM base
+GROUP BY 1,2,3
+ORDER BY revenue DESC
+LIMIT 20;
