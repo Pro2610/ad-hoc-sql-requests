@@ -1,0 +1,23 @@
+# Req 010 — Root Cause Drilldown Template
+
+## 📌 Request
+A KPI changed unexpectedly.  
+Provide a structured SQL template to quickly identify the root cause.
+
+## 🧩 Business Context
+When a metric moves unexpectedly (revenue, paid users, conversion),
+analysts must quickly determine:
+- what changed,
+- where the change occurred,
+- which segment caused it.
+
+This template standardizes the **root cause drilldown workflow**.
+
+## 📐 Investigation Framework
+Root cause analysis should follow this order:
+
+1. Confirm the metric change
+2. Decompose metric drivers
+3. Identify segment contribution
+4. Check outliers
+5. Verify persistence
