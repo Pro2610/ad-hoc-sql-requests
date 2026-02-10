@@ -1,0 +1,22 @@
+# Req 011 — ARPPU Change: Mix Shift vs Within-Segment Change
+
+## 📌 Request
+ARPPU changed recently.  
+Was the change driven by:
+- performance changes within segments, or
+- a shift in user mix (segment composition)?
+
+## 🧩 Business Context
+Aggregate ARPPU can change even when segment performance remains stable,
+if the share of high-value or low-value segments changes.
+
+Understanding the driver is critical for:
+- marketing decisions,
+- pricing strategy,
+- campaign evaluation.
+
+## 📐 Analysis Logic
+We compare:
+- **Previous period vs Current period**
+- Segment-level ARPPU
+- Segment revenue share
