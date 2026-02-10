@@ -1,0 +1,22 @@
+SELECT
+  COALESCE(p.location, c.location) AS location,
+  COALESCE(p.software_name, c.software_name) AS software_name,
+  COALESCE(p.user_type, c.user_type) AS user_type,
+
+  p.arppu AS arppu_previous,
+  c.arppu AS arppu_current,
+  (c.arppu - p.arppu) AS arppu_change,
+
+  p.revenue_share AS share_previous,
+  c.revenue_share AS share_current,
+  (c.revenue_share - p.revenue_share) AS share_change
+
+FROM segment_share p
+FULL OUTER JOIN segment_share c
+  ON p.location = c.location
+ AND p.software_name = c.software_name
+ AND p.user_type = c.user_type
+ AND p.period = 'previous_period'
+ AND c.period = 'current_period'
+
+ORDER BY share_change DESC;
