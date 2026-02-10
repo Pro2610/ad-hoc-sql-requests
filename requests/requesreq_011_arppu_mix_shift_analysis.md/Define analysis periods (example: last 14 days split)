@@ -1,0 +1,15 @@
+WITH base AS (
+  SELECT
+    CASE
+      WHEN DATE(payment_date) >= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY)
+      THEN 'current_period'
+      ELSE 'previous_period'
+    END AS period,
+    location,
+    software_name,
+    `User Type` AS user_type,
+    user_id,
+    revenue_amount
+  FROM `project.dataset.payments`
+  WHERE DATE(payment_date) >= DATE_SUB(CURRENT_DATE(), INTERVAL 14 DAY)
+)
