@@ -1,0 +1,9 @@
+, segment_share AS (
+  SELECT
+    *,
+    SAFE_DIVIDE(
+      revenue,
+      SUM(revenue) OVER (PARTITION BY period)
+    ) AS revenue_share
+  FROM segment_metrics
+)
