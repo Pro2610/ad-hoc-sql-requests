@@ -1,0 +1,10 @@
+, historical_value AS (
+  SELECT
+    user_id,
+    SUM(revenue_amount) AS lifetime_revenue,
+    COUNT(*) AS lifetime_transactions,
+    SAFE_DIVIDE(SUM(revenue_amount), COUNT(*)) AS avg_transaction_value,
+    MAX(DATE(payment_date)) AS last_payment_date
+  FROM `project.dataset.payments`
+  GROUP BY 1
+)
