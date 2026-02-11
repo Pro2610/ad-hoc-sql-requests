@@ -1,0 +1,18 @@
+# Req 012 — Win-back Target List (High-value Churned Users Last Month)
+
+## 📌 Request
+Generate a target list of high-value users who churned last month
+to run a win-back campaign.
+
+## 🧩 Business Context
+Win-back campaigns are most efficient when targeted at users with:
+- proven high historical value,
+- recent churn (still recoverable),
+- clear business impact if reactivated.
+
+This request produces a **prioritized list**.
+
+## 📐 Definitions
+- **Churned last month**: user had revenue in last month, and **no revenue in current month**
+- **High-value user**: top users by last month revenue (or historical revenue)
+- **Priority**: highest last-month revenue first (optionally combined with historical value)
