@@ -1,0 +1,19 @@
+, churn_flags AS (
+  SELECT
+    user_id,
+    month,
+    revenue,
+    LEAD(revenue) OVER (
+      PARTITION BY user_id
+      ORDER BY month
+    ) AS next_month_revenue
+  FROM monthly_user_revenue
+),
+churned_last_month AS (
+  SELECT
+    user_id,
+    revenue AS last_month_revenue
+  FROM churn_flags
+  WHERE month = DATE_SUB(DATE_TRUNC(CURRENT_DATE(), MONTH), INTERVAL 1 MONTH)
+    AND next_month_revenue IS NULL
+)
