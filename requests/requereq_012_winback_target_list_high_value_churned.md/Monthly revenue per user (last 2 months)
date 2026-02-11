@@ -1,0 +1,11 @@
+WITH monthly_user_revenue AS (
+  SELECT
+    user_id,
+    DATE_TRUNC(DATE(payment_date), MONTH) AS month,
+    SUM(revenue_amount) AS revenue
+  FROM `project.dataset.payments`
+  WHERE DATE_TRUNC(DATE(payment_date), MONTH)
+        BETWEEN DATE_SUB(DATE_TRUNC(CURRENT_DATE(), MONTH), INTERVAL 1 MONTH)
+            AND DATE_TRUNC(CURRENT_DATE(), MONTH)
+  GROUP BY 1,2
+)
