@@ -1,0 +1,17 @@
+SELECT
+  c.user_id,
+  c.last_month_revenue,
+  hv.lifetime_revenue,
+  hv.lifetime_transactions,
+  hv.avg_transaction_value,
+  hv.last_payment_date,
+  us.location,
+  us.software_name,
+  us.user_type
+FROM churned_last_month c
+JOIN historical_value hv
+  ON c.user_id = hv.user_id
+LEFT JOIN user_segments us
+  ON c.user_id = us.user_id
+ORDER BY c.last_month_revenue DESC
+LIMIT 200;
