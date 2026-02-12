@@ -1,0 +1,19 @@
+, signals AS (
+  SELECT
+    ub.user_id,
+    DATE_DIFF(CURRENT_DATE(), ub.last_payment_date, DAY) AS days_since_last_payment,
+    ub.total_revenue,
+    ub.avg_transaction_value,
+    aw.tx_last_30d,
+    aw.tx_before_30d,
+    aw.revenue_last_30d,
+    aw.revenue_before_30d,
+
+    -- Loyal activity signals
+    CASE WHEN DATE_DIFF(CURRENT_DATE(), ub.last_payment_date, DAY) <= 14 THEN 1 ELSE 0 END AS active_flag,
+    CASE WHEN aw.tx_last_30d >= aw.tx_before_30d THEN 1 ELSE 0 END AS stable_frequency_flag,
+    CASE WHEN ub.total_revenue >= 1000 THEN 1 ELSE 0 END AS high_value_flag
+  FROM user_base ub
+  JOIN activity_windows aw
+    ON ub.user_id = aw.user_id
+)
