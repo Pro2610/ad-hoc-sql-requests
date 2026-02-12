@@ -1,0 +1,23 @@
+# Req 013 — Offer Guardrail: Who Should NOT Get Discounts
+
+## 📌 Request
+Identify users who should **NOT receive discounts**, in order to protect revenue and margins.
+
+## 🧩 Business Context
+Not all users require incentives.
+Providing discounts to already loyal or high-value users can reduce ARPPU
+without increasing retention.
+
+This request identifies users who:
+- purchase consistently,
+- show low churn risk,
+- maintain strong revenue contribution.
+
+These users should be excluded from discount campaigns.
+
+## 📐 Guardrail Logic
+Users should **NOT receive discounts** if they:
+1. Made payments recently (active users)
+2. Show stable or increasing transaction frequency
+3. Have strong historical value (high revenue)
+4. Have low churn risk
