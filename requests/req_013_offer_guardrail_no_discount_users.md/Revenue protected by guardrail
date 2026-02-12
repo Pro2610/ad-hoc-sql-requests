@@ -1,0 +1,7 @@
+SELECT
+  COUNT(*) AS protected_users,
+  SUM(total_revenue) AS protected_revenue
+FROM signals
+WHERE active_flag = 1
+  AND stable_frequency_flag = 1
+  AND high_value_flag = 1;
