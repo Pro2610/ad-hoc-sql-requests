@@ -1,0 +1,12 @@
+SELECT
+  user_id,
+  total_revenue,
+  days_since_last_payment,
+  tx_last_30d,
+  tx_before_30d
+FROM signals
+WHERE active_flag = 1
+  AND stable_frequency_flag = 1
+  AND high_value_flag = 1
+ORDER BY total_revenue DESC
+LIMIT 500;
