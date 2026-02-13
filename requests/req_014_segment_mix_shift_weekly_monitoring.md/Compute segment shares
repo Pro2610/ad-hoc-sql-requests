@@ -1,0 +1,16 @@
+, segment_shares AS (
+  SELECT
+    *,
+    SAFE_DIVIDE(
+      revenue,
+      SUM(revenue) OVER (PARTITION BY week)
+    ) AS revenue_share,
+    SAFE_DIVIDE(
+      paid_users,
+      SUM(paid_users) OVER (PARTITION BY week)
+    ) AS users_share
+  FROM weekly_segment
+)
+SELECT *
+FROM segment_shares
+ORDER BY week DESC, revenue_share DESC;
