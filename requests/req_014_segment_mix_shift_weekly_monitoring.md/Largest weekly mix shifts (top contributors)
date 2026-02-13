@@ -1,0 +1,9 @@
+SELECT
+  week,
+  location,
+  software_name,
+  user_type,
+  revenue_share_delta
+FROM mix_shift_table
+WHERE ABS(revenue_share_delta) > 0.02
+ORDER BY week DESC, ABS(revenue_share_delta) DESC;
