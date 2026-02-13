@@ -1,0 +1,23 @@
+# Req 014 — Segment Mix Shift Weekly Monitoring Table
+
+## 📌 Request
+Create a weekly monitoring table to track segment mix shifts over time.
+
+## 🧩 Business Context
+Changes in revenue or ARPPU are often driven not by performance changes,
+but by **segment composition shifts**:
+- country mix
+- product mix
+- user type mix
+
+Weekly monitoring helps detect:
+- marketing mix changes,
+- campaign quality shifts,
+- regional performance issues.
+
+## 📐 Monitoring Logic
+For each week and segment:
+- Revenue
+- Paid users
+- Revenue share
+- Paid user share
