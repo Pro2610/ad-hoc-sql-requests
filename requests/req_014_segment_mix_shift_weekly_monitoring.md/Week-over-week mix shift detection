@@ -1,0 +1,31 @@
+WITH lagged AS (
+  SELECT
+    week,
+    location,
+    software_name,
+    user_type,
+    revenue_share,
+    users_share,
+    LAG(revenue_share) OVER (
+      PARTITION BY location, software_name, user_type
+      ORDER BY week
+    ) AS prev_revenue_share,
+    LAG(users_share) OVER (
+      PARTITION BY location, software_name, user_type
+      ORDER BY week
+    ) AS prev_users_share
+  FROM segment_shares
+)
+SELECT
+  week,
+  location,
+  software_name,
+  user_type,
+  revenue_share,
+  prev_revenue_share,
+  (revenue_share - prev_revenue_share) AS revenue_share_delta,
+  users_share,
+  prev_users_share,
+  (users_share - prev_users_share) AS users_share_delta
+FROM lagged
+ORDER BY week DESC, ABS(revenue_share_delta) DESC;
