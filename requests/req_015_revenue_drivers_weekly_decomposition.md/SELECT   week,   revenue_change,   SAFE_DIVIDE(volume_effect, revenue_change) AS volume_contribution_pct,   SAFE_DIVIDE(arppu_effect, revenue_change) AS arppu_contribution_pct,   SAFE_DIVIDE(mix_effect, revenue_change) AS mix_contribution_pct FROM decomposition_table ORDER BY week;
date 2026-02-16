@@ -1,0 +1,7 @@
+SELECT
+  DATE_TRUNC(DATE(payment_date), WEEK(MONDAY)) AS week,
+  location,
+  SUM(revenue_amount) AS revenue
+FROM `project.dataset.payments`
+GROUP BY 1,2
+ORDER BY week, revenue DESC;
