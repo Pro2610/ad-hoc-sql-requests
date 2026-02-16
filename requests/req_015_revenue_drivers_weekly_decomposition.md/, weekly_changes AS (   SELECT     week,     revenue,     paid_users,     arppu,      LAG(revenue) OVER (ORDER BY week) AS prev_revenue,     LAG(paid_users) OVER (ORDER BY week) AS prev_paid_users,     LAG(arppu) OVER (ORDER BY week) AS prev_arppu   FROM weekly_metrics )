@@ -1,0 +1,20 @@
+SELECT
+  week,
+  revenue,
+  prev_revenue,
+  (revenue - prev_revenue) AS revenue_change,
+
+  -- Volume effect
+  (paid_users - prev_paid_users) * prev_arppu AS volume_effect,
+
+  -- ARPPU effect
+  (arppu - prev_arppu) * prev_paid_users AS arppu_effect,
+
+  -- Residual (mix or interaction effect)
+  (revenue - prev_revenue)
+    - ((paid_users - prev_paid_users) * prev_arppu)
+    - ((arppu - prev_arppu) * prev_paid_users)
+    AS mix_effect
+
+FROM weekly_changes
+ORDER BY week;
