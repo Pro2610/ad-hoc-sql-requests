@@ -1,0 +1,12 @@
+, weekly_changes AS (
+  SELECT
+    week,
+    revenue,
+    paid_users,
+    arppu,
+
+    LAG(revenue) OVER (ORDER BY week) AS prev_revenue,
+    LAG(paid_users) OVER (ORDER BY week) AS prev_paid_users,
+    LAG(arppu) OVER (ORDER BY week) AS prev_arppu
+  FROM weekly_metrics
+)
