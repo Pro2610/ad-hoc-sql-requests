@@ -1,0 +1,8 @@
+SELECT
+  week,
+  revenue_change,
+  SAFE_DIVIDE(volume_effect, revenue_change) AS volume_contribution_pct,
+  SAFE_DIVIDE(arppu_effect, revenue_change) AS arppu_contribution_pct,
+  SAFE_DIVIDE(mix_effect, revenue_change) AS mix_contribution_pct
+FROM decomposition_table
+ORDER BY week;
